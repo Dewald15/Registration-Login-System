@@ -68,7 +68,7 @@
                                         th:field="*{lastName}"
                                         type="text"
                                 />
-                                <p th:errors = "*{lastName}" class="text-danger"
+                                <p th:errors="*{lastName}" class="text-danger"
                                    th:if="${#fields.hasErrors('lastName')}"></p>
                             </div>
                             <div class="form-group mb-3">
@@ -81,7 +81,7 @@
                                         th:field="*{email}"
                                         type="email"
                                 />
-                                <p th:errors = "*{email}" class="text-danger"
+                                <p th:errors="*{email}" class="text-danger"
                                    th:if="${#fields.hasErrors('email')}"></p>
                             </div>
                             <div class="form-group mb-3">
@@ -94,7 +94,7 @@
                                         th:field="*{password}"
                                         type="password"
                                 />
-                                <p th:errors = "*{password}" class="text-danger"
+                                <p th:errors="*{password}" class="text-danger"
                                    th:if="${#fields.hasErrors('password')}"></p>
                             </div>
                             <div class="form-group">
