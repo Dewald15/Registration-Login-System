@@ -8,7 +8,6 @@ This is a Java Spring Boot application that provides a registration and login sy
 - MySQL Server
 - Maven
 
----
 ## Technologies Used
 
 - Spring Boot 3.3.0
@@ -18,7 +17,6 @@ This is a Java Spring Boot application that provides a registration and login sy
 - MySQL
 - Lombok
 
----
 ## Project Structure
 
 ```bash
@@ -75,30 +73,25 @@ Registration-Login-System
 5. Run the application using the `RegistrationLoginSystemApplication` class.
 6. Access the application at [http://localhost:8080/index](http://localhost:8080/index).
 
----
 # Application Flow
 
 ## Registration
 - Users can register by providing their first name, last name, email, and password.
 - Upon successful registration, they will be redirected to the login page.
 
----
 ## Login
 - Users can log in using their registered email and password.
 - Upon successful login:
     - Users with the admin role will be redirected to the users page.
     - Regular users will be redirected to the index page.
 
----
 ## Users Page
 - Accessible only to users with the admin role.
 - This page displays a list of all registered users, including their first name, last name, and email.
 
----
 ## Logout
 - Users can log out from the application by clicking the "Logout" link in the navigation menu.
 
----
 # Configuration
 
 The `application.properties` file contains the following configuration:
@@ -121,7 +114,6 @@ logging.level.org.springframework.security=DEBUG
 ```
 Update the `spring.datasource.username` and `spring.datasource.password` properties with your MySQL server credentials.
 
----
 # Security Configuration
 
 The `SpringSecurity` class configures the application's security settings:
@@ -134,7 +126,6 @@ The `SpringSecurity` class configures the application's security settings:
 
 The `CustomAuthenticationSuccessHandler` class is responsible for redirecting users to the appropriate page after successful authentication, based on their roles.
 
----
 # Service Layer
 
 The `UserService` interface and `UserServiceImpl` class handle the business logic related to user management:
@@ -143,28 +134,23 @@ The `UserService` interface and `UserServiceImpl` class handle the business logi
 - `findUserByEmail`: Retrieves a user by their email address.
 - `findAllUsers`: Retrieves a list of all registered users.
 
----
 # Repository Layer
 
 The `UserRepository` and `RoleRepository` interfaces extend the `JpaRepository` interface from Spring Data JPA, providing CRUD operations for the User and Role entities, respectively.
 
----
 # Entity Classes
 
 - **User**: Represents a registered user with fields for id, name, email, password, and roles.
 - **Role**: Represents a user role with fields for id and name.
 
----
 # DTO Classes
 
 - **UserDto**: A Data Transfer Object used for transferring user data between the application layers.
 
----
 # Controller Classes
 
 - **AuthController**: Handles user authentication, including registration, login, and displaying the list of users (for admins).
 
----
 # View Layer
 
 The application uses Thymeleaf templates for rendering the user interface:
@@ -173,8 +159,6 @@ The application uses Thymeleaf templates for rendering the user interface:
 - **register.html**: The registration form.
 - **login.html**: The login form.
 - **users.html**: The page displaying the list of registered users (accessible to admins).
-
----
 
 # Building and Running the Application
 
@@ -193,7 +177,6 @@ To build and run the application, follow these steps:
     ```
    The application will be accessible at http://localhost:8080.
 
----
 # Testing
 The project includes unit tests for the RegistrationLoginSystemApplication class. You can run the tests using the following command:
 ```bash
