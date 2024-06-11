@@ -5,6 +5,7 @@ import com.dee.registration_login_system.entity.User;
 import com.dee.registration_login_system.service.UserService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.security.Principal;
 import java.util.List;
 
 @Controller
@@ -21,20 +23,22 @@ public class AuthController {
     UserService userService;
 
     @GetMapping("/index")
-    public String home(){
+    public String home(Model model, Principal principal){
+        model.addAttribute("authenticated", principal != null);
         return "index";
     }
 
     @GetMapping("/login")
-    public String login(){
+    public String login(Model model, Principal principal){
+        model.addAttribute("authenticated", principal != null);
         return "login";
     }
 
     @GetMapping("/register")
-    public String showRegistrationForm(Model model){
-        // create model object to store form data
+    public String showRegistrationForm(Model model, Principal principal){
         UserDto user = new UserDto();
         model.addAttribute("user", user);
+        model.addAttribute("authenticated", principal != null);
         return "register";
     }
 
@@ -59,8 +63,9 @@ public class AuthController {
     }
 
     @GetMapping("/users")
-    public String users(Model model){
+    public String users(Model model, Principal principal){
         List<UserDto> users = userService.findAllUsers();
+        model.addAttribute("authenticated", principal != null);
         model.addAttribute("users", users);
         return "users";
     }

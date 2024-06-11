@@ -19,12 +19,11 @@ public class SpringSecurity {
     @Autowired
     private UserDetailsService userDetailsService;
 
-//    @Bean
-//    public static PasswordEncoder passwordEncoder(){
-//        return new BCryptPasswordEncoder();
-//    }
+    @Bean
+    public static PasswordEncoder passwordEncoder(){
+        return new BCryptPasswordEncoder();
+    }
 
-    // configure SecurityFilterChain
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf().disable()
@@ -32,7 +31,7 @@ public class SpringSecurity {
                 .requestMatchers("/register/**").permitAll()
                 .requestMatchers("/index").permitAll()
                 .requestMatchers("/users").hasRole("ADMIN")
-                //.requestMatchers("/users").hasRole("USER")
+                .anyRequest().authenticated()
                 .and()
                 .formLogin(
                         form -> form
@@ -49,9 +48,9 @@ public class SpringSecurity {
         return http.build();
     }
 
-//    @Autowired
-//    public void configureGlobal(AuthenticationManagerBuilder builder) throws Exception {
-//        builder.userDetailsService(userDetailsService)
-//                .passwordEncoder(passwordEncoder());
-//    }
+    @Autowired
+    public void configureGlobal(AuthenticationManagerBuilder builder) throws Exception {
+        builder.userDetailsService(userDetailsService)
+                .passwordEncoder(passwordEncoder());
+    }
 }

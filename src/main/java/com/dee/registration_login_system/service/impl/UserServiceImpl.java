@@ -7,6 +7,7 @@ import com.dee.registration_login_system.repository.RoleRepository;
 import com.dee.registration_login_system.repository.UserRepository;
 import com.dee.registration_login_system.service.UserService;
 import lombok.AllArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -19,12 +20,14 @@ public class UserServiceImpl implements UserService {
 
     private UserRepository userRepository;
     private RoleRepository roleRepository;
+    private PasswordEncoder passwordEncoder;
+
     @Override
     public void saveUser(UserDto userDto) {
         User user = new User();
         user.setName(userDto.getFirstName() + " " + userDto.getLastName());
         user.setEmail(userDto.getEmail());
-        user.setPassword(userDto.getPassword());
+        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
 
         Role role = roleRepository.findByName("ROLE_ADMIN");
 
