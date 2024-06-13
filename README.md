@@ -197,7 +197,6 @@ To build and run the application, follow these steps:
 
 That's it! This documentation should help you understand the structure, functionality, and configuration of the Registration and Login System project.
 
----
 
 ## Screenshots
 <div style="text-align: center;">
