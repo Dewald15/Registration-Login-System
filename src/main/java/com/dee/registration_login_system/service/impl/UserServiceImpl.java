@@ -65,6 +65,28 @@ public class UserServiceImpl implements UserService {
         userRepository.deleteById(userId);
     }
 
+    @Override
+    public UserDto getUserById(Long id) {
+        User user = userRepository.findById(id).get();
+        return mapToUserDto(user);
+    }
+
+    @Override
+    public void updateUser(UserDto userDto) {
+        User existingUser = userRepository.findById(userDto.getId())
+                .orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + userDto.getId()));
+
+        existingUser.setName(userDto.getFirstName() + " " + userDto.getLastName());
+        existingUser.setEmail(userDto.getEmail());
+
+        // Update password only if it is provided
+        if (userDto.getPassword() != null && !userDto.getPassword().isEmpty()) {
+            existingUser.setPassword(passwordEncoder.encode(userDto.getPassword()));
+        }
+
+        userRepository.save(existingUser);
+    }
+
     private UserDto mapToUserDto(User user){
         UserDto userDto = new UserDto();
         String[] str = user.getName().split(" ");
@@ -73,6 +95,15 @@ public class UserServiceImpl implements UserService {
         userDto.setLastName(str[1]);
         userDto.setEmail(user.getEmail());
         return userDto;
+    }
+
+    private User mapToUser(UserDto userDto){
+        User user = new User();
+        String name = userDto.getFirstName() + " " + userDto.getLastName();
+        user.setId(userDto.getId());
+        user.setName(name);
+        user.setEmail(userDto.getEmail());
+        return user;
     }
 
     private Role checkRoleExist(){

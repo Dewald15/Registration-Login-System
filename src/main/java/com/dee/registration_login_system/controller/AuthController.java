@@ -3,12 +3,14 @@ package com.dee.registration_login_system.controller;
 import com.dee.registration_login_system.dto.UserDto;
 import com.dee.registration_login_system.entity.User;
 import com.dee.registration_login_system.service.UserService;
+import com.dee.registration_login_system.service.ValidationGroups;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -44,7 +46,7 @@ public class AuthController {
     }
 
     @PostMapping("/register/save")
-    public String registration(@Valid @ModelAttribute("user") UserDto userDto,
+    public String registration(@Validated(ValidationGroups.OnCreate.class) @Valid @ModelAttribute("user") UserDto userDto,
                                BindingResult result,
                                Model model){
         User existingUser = userService.findUserByEmail(userDto.getEmail());
@@ -74,6 +76,31 @@ public class AuthController {
     @GetMapping("/user/{userId}/delete")
     public String deleteUser(@PathVariable("userId") Long userId){
         userService.deleteUser(userId);
+        return "redirect:/users";
+    }
+
+    @GetMapping("/user/{userId}/edit")
+    public String editUser(@PathVariable("userId") Long userId,
+                              Model model,
+                           Principal principal){
+        UserDto user = userService.getUserById(userId);
+        model.addAttribute("user", user);
+        model.addAttribute("authenticated", principal != null);
+        return "edit_user";
+    }
+
+    @PostMapping("/user/{userId}")
+    public String updateUser(@PathVariable("userId") Long userId,
+                             @Validated(ValidationGroups.OnUpdate.class) @Valid @ModelAttribute("user") UserDto userDto,
+                                BindingResult result,
+                                Model model){
+        if(result.hasErrors()){
+            userDto.setId(userId);
+            model.addAttribute("user", userDto);
+            return "edit_user";
+        }
+        userDto.setId(userId);
+        userService.updateUser(userDto);
         return "redirect:/users";
     }
 }
