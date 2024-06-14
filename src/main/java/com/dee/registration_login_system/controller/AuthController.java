@@ -81,7 +81,7 @@ public class AuthController {
 
     @GetMapping("/user/{userId}/edit")
     public String editUser(@PathVariable("userId") Long userId,
-                              Model model,
+                           Model model,
                            Principal principal){
         UserDto user = userService.getUserById(userId);
         model.addAttribute("user", user);
@@ -92,15 +92,27 @@ public class AuthController {
     @PostMapping("/user/{userId}")
     public String updateUser(@PathVariable("userId") Long userId,
                              @Validated(ValidationGroups.OnUpdate.class) @Valid @ModelAttribute("user") UserDto userDto,
-                                BindingResult result,
-                                Model model){
+                             BindingResult result,
+                             Model model,
+                             Principal principal){
         if(result.hasErrors()){
             userDto.setId(userId);
+            model.addAttribute("authenticated", principal != null);
             model.addAttribute("user", userDto);
             return "edit_user";
         }
         userDto.setId(userId);
         userService.updateUser(userDto);
         return "redirect:/users";
+    }
+
+    @GetMapping("/user/{userId}/view")
+    public String viewUser(@PathVariable("userId") Long userId,
+                           Model model,
+                           Principal principal){
+        UserDto userDto = userService.getUserById(userId);
+        model.addAttribute("authenticated", principal != null);
+        model.addAttribute("user", userDto);
+        return "view_user";
     }
 }
