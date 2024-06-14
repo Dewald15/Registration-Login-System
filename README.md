@@ -16,7 +16,8 @@ This is a Java Spring Boot application that provides a registration and login sy
 11. [Controller Classes](#controller-classes)
 12. [View Layer](#view-layer)
 13. [Building and Running the Application](#building-and-running-the-application)
-14. [Screenshots](#screenshots)
+14. [Authors](#authors)
+15. [Screenshots](#screenshots)
 
 ## Prerequisites
 
@@ -196,6 +197,10 @@ To build and run the application, follow these steps:
 ---
 
 That's it! This documentation should help you understand the structure, functionality, and configuration of the Registration and Login System project.
+
+## Authors
+
+Dewald van den Berg - [GitHub](https://github.com/Dewald15)
 
 
 ## Screenshots
