@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.security.Principal;
@@ -68,5 +69,11 @@ public class AuthController {
         model.addAttribute("authenticated", principal != null);
         model.addAttribute("users", users);
         return "users";
+    }
+
+    @GetMapping("/user/{userId}/delete")
+    public String deleteUser(@PathVariable("userId") Long userId){
+        userService.deleteUser(userId);
+        return "redirect:/users";
     }
 }
