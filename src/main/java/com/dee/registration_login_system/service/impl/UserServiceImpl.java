@@ -6,11 +6,13 @@ import com.dee.registration_login_system.entity.User;
 import com.dee.registration_login_system.repository.RoleRepository;
 import com.dee.registration_login_system.repository.UserRepository;
 import com.dee.registration_login_system.service.UserService;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -85,6 +87,35 @@ public class UserServiceImpl implements UserService {
         }
 
         userRepository.save(existingUser);
+    }
+
+    @Transactional
+    @Override
+    public void changeUserRole(Long userId, String roleName) {
+        // Find the user by ID
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid user ID"));
+
+        // Find the new role by name
+        Role newRole = roleRepository.findByName(roleName);
+
+        if (newRole == null) {
+            throw new IllegalArgumentException("Invalid role name");
+        }
+
+        // Clear the current roles
+        user.getRoles().clear();
+
+        // Set the new role
+        user.getRoles().add(newRole);
+
+        // Save the updated user back to the repository
+        userRepository.save(user);
+    }
+
+    @Override
+    public List<Role> findAllRoles() {
+        return roleRepository.findAll();
     }
 
     private UserDto mapToUserDto(User user){

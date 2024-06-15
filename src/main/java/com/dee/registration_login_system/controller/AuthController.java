@@ -1,24 +1,25 @@
 package com.dee.registration_login_system.controller;
 
 import com.dee.registration_login_system.dto.UserDto;
+import com.dee.registration_login_system.entity.Role;
 import com.dee.registration_login_system.entity.User;
 import com.dee.registration_login_system.security.CustomUserDetails;
 import com.dee.registration_login_system.service.UserService;
 import com.dee.registration_login_system.service.ValidationGroups;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @AllArgsConstructor
@@ -76,6 +77,9 @@ public class AuthController {
             Long userId = userDetails.getUserId();
             model.addAttribute("userId", userId);
         }
+        // Fetch all roles and add to model
+        List<Role> roles = userService.findAllRoles();
+        model.addAttribute("roles", roles);
         return "users";
     }
 
@@ -140,5 +144,18 @@ public class AuthController {
         model.addAttribute("authenticated", principal != null);
         model.addAttribute("user", userDto);
         return "view_user";
+    }
+
+    @PostMapping("/user/{userId}/changeRole")
+    @ResponseBody
+    public ResponseEntity<String> changeUserRole(@PathVariable("userId") Long userId,
+                                                 @RequestBody Map<String, String> request) {
+        String roleName = request.get("roleName");
+        try {
+            userService.changeUserRole(userId, roleName);
+            return ResponseEntity.ok("User role updated successfully");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating user role");
+        }
     }
 }
