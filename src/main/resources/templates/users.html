@@ -70,7 +70,7 @@
                             <!-- Users can only see their own 'Edit' button -->
                             <a class="btn btn-primary" sec:authorize="hasRole('ROLE_USER')" th:if="${user.id} == ${userId}" th:href="@{/user/{userId}/edit(userId=${user.id})}">Edit</a>
                         </div>
-                        <div class="dropdown">
+                        <div class="dropdown" th:if="${user.id} != ${userId}" sec:authorize="hasRole('ROLE_ADMIN')">
                             <button class="btn btn-secondary dropdown-toggle"
                                     type="button"
                                     th:id="'dropdownMenuButton_' + ${user.id}"
