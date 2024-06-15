@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en"
     xmlns:th="http://www.thymeleaf.org"
+    xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
 >
     <head>
         <meta charset="UTF-8">
@@ -36,10 +37,13 @@
             </div>
         </nav>
         <br/><br/>
-        <div class="container">
-            <div class="row col-md-10">
-                <h2>List of Registered Users</h2>
+        <div class="container" style="text-align: center;">
+            <div class="row justify-content-center">
+                <div class="col-md-10">
+                    <h2>List of Registered Users</h2>
+                </div>
             </div>
+            <br/>
             <table class="table table-bordered table-hover">
                 <thead class="table-dark">
                     <tr>
@@ -51,17 +55,22 @@
                 </thead>
                 <tbody>
                     <tr th:each = "user : ${users}">
-                        <td th:text = "${user.firstName}"></td>
-                        <td th:text = "${user.lastName}"></td>
-                        <td th:text = "${user.email}"></td>
-                        <td style="text-align: center;">
-                            <a class="btn btn-primary" th:href="@{/user/{userId}/edit(userId=${user.id})}">Edit</a>
-                            <a class="btn btn-danger" th:href="@{/user/{userId}/delete(userId=${user.id})}">Delete</a>
-                            <a class="btn btn-info" th:href="@{/user/{userId}/view(userId=${user.id})}">View</a>
+                        <td th:text="${user.firstName}"></td>
+                        <td th:text="${user.lastName}"></td>
+                        <td th:text="${user.email}"></td>
+                        <td>
+                            <!-- Admins can see all actions -->
+                            <a class="btn btn-primary" sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{/user/{userId}/edit(userId=${user.id})}">Edit</a>
+                            <a class="btn btn-info" sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{/user/{userId}/view(userId=${user.id})}">View</a>
+                            <a class="btn btn-danger" sec:authorize="hasRole('ROLE_ADMIN')" th:if="${user.id} != ${userId}" th:href="@{/user/{userId}/delete(userId=${user.id})}">Delete</a>
+
+                            <!-- Users can only see their own 'Edit' button -->
+                            <a class="btn btn-primary" sec:authorize="hasRole('ROLE_USER')" th:if="${user.id} == ${userId}" th:href="@{/user/{userId}/edit(userId=${user.id})}">Edit</a>
                         </td>
                     </tr>
                 </tbody>
             </table>
+            <h1 th:text="'User ID: ' + ${userId}">User ID: </h1>
         </div>
     </body>
 </html>

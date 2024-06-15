@@ -2,6 +2,7 @@ package com.dee.registration_login_system.controller;
 
 import com.dee.registration_login_system.dto.UserDto;
 import com.dee.registration_login_system.entity.User;
+import com.dee.registration_login_system.security.CustomUserDetails;
 import com.dee.registration_login_system.service.UserService;
 import com.dee.registration_login_system.service.ValidationGroups;
 import jakarta.validation.Valid;
@@ -70,11 +71,27 @@ public class AuthController {
         List<UserDto> users = userService.findAllUsers();
         model.addAttribute("authenticated", principal != null);
         model.addAttribute("users", users);
+        if (principal != null) {
+            CustomUserDetails userDetails = (CustomUserDetails) ((Authentication) principal).getPrincipal();
+            Long userId = userDetails.getUserId();
+            model.addAttribute("userId", userId);
+        }
         return "users";
     }
 
     @GetMapping("/user/{userId}/delete")
-    public String deleteUser(@PathVariable("userId") Long userId){
+    public String deleteUser(@PathVariable("userId") Long userId, Principal principal) {
+        // Get the logged-in user's ID
+        CustomUserDetails userDetails = (CustomUserDetails) ((Authentication) principal).getPrincipal();
+        Long currentUserId = userDetails.getUserId();
+
+        // Check if the logged-in user is trying to delete their own account
+        if (userId.equals(currentUserId)) {
+            // Redirect to an error page or show a message
+            return "redirect:/error?message=Cannot delete your own account";
+        }
+
+        // Proceed with deletion if it's not the current user
         userService.deleteUser(userId);
         return "redirect:/users";
     }
@@ -83,6 +100,15 @@ public class AuthController {
     public String editUser(@PathVariable("userId") Long userId,
                            Model model,
                            Principal principal){
+        // Get the logged-in user's ID
+        CustomUserDetails userDetails = (CustomUserDetails) ((Authentication) principal).getPrincipal();
+        Long currentUserId = userDetails.getUserId();
+
+        // Check if the logged-in user is trying to delete their own account
+        if (!userId.equals(currentUserId)) {
+            // Redirect to an error page or show a message
+            return "redirect:/error?message=Cannot edit other user accounts";
+        }
         UserDto user = userService.getUserById(userId);
         model.addAttribute("user", user);
         model.addAttribute("authenticated", principal != null);
