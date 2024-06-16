@@ -23,4 +23,5 @@ public class UserDto {
     private String email;
     @NotEmpty(groups = ValidationGroups.OnCreate.class, message = "Password should not be empty")
     private String password;
+    private String roles;
 }

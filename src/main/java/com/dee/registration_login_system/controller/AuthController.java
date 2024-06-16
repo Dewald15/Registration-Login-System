@@ -72,6 +72,7 @@ public class AuthController {
         List<UserDto> users = userService.findAllUsers();
         model.addAttribute("authenticated", principal != null);
         model.addAttribute("users", users);
+//        users.forEach((user) -> System.out.println(user.get));
         if (principal != null) {
             CustomUserDetails userDetails = (CustomUserDetails) ((Authentication) principal).getPrincipal();
             Long userId = userDetails.getUserId();

@@ -12,7 +12,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,19 +25,29 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void saveUser(UserDto userDto) {
+        String roleAdminString = "ROLE_ADMIN";
+        String roleUserString = "ROLE_USER";
+
         User user = new User();
         user.setName(userDto.getFirstName() + " " + userDto.getLastName());
         user.setEmail(userDto.getEmail());
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
 
-        Role role = roleRepository.findByName("ROLE_ADMIN");
+        Role roleAdmin = roleRepository.findByName(roleAdminString);
+        Role roleUser = roleRepository.findByName(roleUserString);
 
-        if(role == null){
-            role = checkRoleExist();
+        if(roleAdmin == null){
+            roleAdmin = saveRole(roleAdminString);
+            user.setRoles(Arrays.asList(roleAdmin));
+            userRepository.save(user);
+        } else if(roleUser == null){
+            roleUser = saveRole(roleUserString);
+            user.setRoles(Arrays.asList(roleUser));
+            userRepository.save(user);
+        } else if(roleUser != null){
+            user.setRoles(Arrays.asList(roleUser));
+            userRepository.save(user);
         }
-
-        user.setRoles(Arrays.asList(role));
-        userRepository.save(user);
     }
 
     @Override
@@ -125,6 +134,12 @@ public class UserServiceImpl implements UserService {
         userDto.setFirstName(str[0]);
         userDto.setLastName(str[1]);
         userDto.setEmail(user.getEmail());
+
+        // Convert the list of roles to a comma-separated string
+        String roles = user.getRoles().stream()
+                .map(Role::getName)
+                .collect(Collectors.joining(", "));
+        userDto.setRoles(roles);
         return userDto;
     }
 
@@ -137,9 +152,9 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
-    private Role checkRoleExist(){
+    private Role saveRole(String newRole){
         Role role = new Role();
-        role.setName("ROLE_ADMIN");
+        role.setName(newRole);
         return roleRepository.save(role);
     }
 }
