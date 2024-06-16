@@ -32,6 +32,14 @@
                             <a class="nav-link active" aria-current="page" th:href="@{/logout}">Logout</a>
                         </li>
                     </ul>
+                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                        <!-- User information section -->
+                        <li class="nav-item" th:if="${authenticated}">
+                            <span class="navbar-text text-white">
+                                <span th:text="${fullName}"></span>
+                            </span>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </nav>
@@ -87,19 +95,6 @@
                             <p th:if="${#fields.hasErrors('email')}" class="text-danger"
                                th:errors="*{email}"></p>
                         </div>
-<!--                        <div class="form-group mb-3">-->
-<!--                            <label class="form-label">Password</label>-->
-<!--                            <input-->
-<!--                                    class="form-control"-->
-<!--                                    id="password"-->
-<!--                                    name="password"-->
-<!--                                    placeholder="Enter Password"-->
-<!--                                    type="password"-->
-<!--                                    th:field="*{password}"-->
-<!--                            />-->
-<!--                            <p th:if="${#fields.hasErrors('password')}" class="text-danger"-->
-<!--                               th:errors="*{password}"></p>-->
-<!--                        </div>-->
                         <button class="btn btn-primary" type="submit">Submit</button>
                     </form>
                 </div>

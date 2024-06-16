@@ -13,6 +13,7 @@ public class CustomUserDetails implements UserDetails {
     private Long userId;
     private String username;
     private String password;
+    private String fullName;
     private Collection<? extends GrantedAuthority> authorities;
 
     @Override

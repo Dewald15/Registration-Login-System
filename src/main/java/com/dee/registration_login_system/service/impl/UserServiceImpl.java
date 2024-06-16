@@ -129,10 +129,11 @@ public class UserServiceImpl implements UserService {
 
     private UserDto mapToUserDto(User user){
         UserDto userDto = new UserDto();
-        String[] str = user.getName().split(" ");
+        String[] str = user.getName().split(" ", 2); // Split into at most 2 parts
         userDto.setId(user.getId());
         userDto.setFirstName(str[0]);
-        userDto.setLastName(str[1]);
+        // Set the last name: if there is more than one part, join the remaining parts
+        userDto.setLastName(str.length > 1 ? str[1] : "");
         userDto.setEmail(user.getEmail());
 
         // Convert the list of roles to a comma-separated string

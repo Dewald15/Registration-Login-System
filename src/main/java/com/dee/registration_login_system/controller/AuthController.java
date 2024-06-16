@@ -11,6 +11,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -28,8 +30,14 @@ public class AuthController {
     UserService userService;
 
     @GetMapping("/index")
-    public String home(Model model, Principal principal){
+    public String home(Model model, Principal principal, @AuthenticationPrincipal UserDetails userDetailsPrincipal){
         model.addAttribute("authenticated", principal != null);
+        if (userDetailsPrincipal instanceof CustomUserDetails) {
+            CustomUserDetails customUserDetails = (CustomUserDetails) userDetailsPrincipal;
+
+            String fullName = customUserDetails.getFullName();
+            model.addAttribute("fullName", fullName);
+        }
         return "index";
     }
 
@@ -68,16 +76,23 @@ public class AuthController {
     }
 
     @GetMapping("/users")
-    public String users(Model model, Principal principal){
+    public String users(Model model,
+                        Principal principal,
+                        @AuthenticationPrincipal UserDetails userDetailsPrincipal){
         List<UserDto> users = userService.findAllUsers();
         model.addAttribute("authenticated", principal != null);
         model.addAttribute("users", users);
-//        users.forEach((user) -> System.out.println(user.get));
-        if (principal != null) {
-            CustomUserDetails userDetails = (CustomUserDetails) ((Authentication) principal).getPrincipal();
-            Long userId = userDetails.getUserId();
+
+        if (userDetailsPrincipal instanceof CustomUserDetails) {
+            CustomUserDetails customUserDetails = (CustomUserDetails) userDetailsPrincipal;
+
+            String fullName = customUserDetails.getFullName();
+            model.addAttribute("fullName", fullName);
+
+            Long userId = customUserDetails.getUserId();
             model.addAttribute("userId", userId);
         }
+
         // Fetch all roles and add to model
         List<Role> roles = userService.findAllRoles();
         model.addAttribute("roles", roles);
@@ -104,19 +119,23 @@ public class AuthController {
     @GetMapping("/user/{userId}/edit")
     public String editUser(@PathVariable("userId") Long userId,
                            Model model,
-                           Principal principal){
+                           Principal principal,
+                           @AuthenticationPrincipal UserDetails userDetailsPrincipal){
         // Get the logged-in user's ID
         CustomUserDetails userDetails = (CustomUserDetails) ((Authentication) principal).getPrincipal();
         Long currentUserId = userDetails.getUserId();
 
-        // Check if the logged-in user is trying to delete their own account
-        if (!userId.equals(currentUserId)) {
-            // Redirect to an error page or show a message
-            return "redirect:/error?message=Cannot edit other user accounts";
-        }
         UserDto user = userService.getUserById(userId);
         model.addAttribute("user", user);
         model.addAttribute("authenticated", principal != null);
+
+        if (userDetailsPrincipal instanceof CustomUserDetails) {
+            CustomUserDetails customUserDetails = (CustomUserDetails) userDetailsPrincipal;
+
+            String fullName = customUserDetails.getFullName();
+            model.addAttribute("fullName", fullName);
+        }
+
         return "edit_user";
     }
 
@@ -140,10 +159,19 @@ public class AuthController {
     @GetMapping("/user/{userId}/view")
     public String viewUser(@PathVariable("userId") Long userId,
                            Model model,
-                           Principal principal){
+                           Principal principal,
+                           @AuthenticationPrincipal UserDetails userDetailsPrincipal){
         UserDto userDto = userService.getUserById(userId);
         model.addAttribute("authenticated", principal != null);
         model.addAttribute("user", userDto);
+
+        if (userDetailsPrincipal instanceof CustomUserDetails) {
+            CustomUserDetails customUserDetails = (CustomUserDetails) userDetailsPrincipal;
+
+            String fullName = customUserDetails.getFullName();
+            model.addAttribute("fullName", fullName);
+        }
+
         return "view_user";
     }
 

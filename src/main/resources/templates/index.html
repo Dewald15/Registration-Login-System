@@ -34,6 +34,14 @@
                             <a class="nav-link active" aria-current="page" th:href="@{/logout}">Logout</a>
                         </li>
                     </ul>
+                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                        <!-- User information section -->
+                        <li class="nav-item" th:if="${authenticated}">
+                            <span class="navbar-text text-white">
+                                <span th:text="${fullName}"></span>
+                            </span>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </nav>

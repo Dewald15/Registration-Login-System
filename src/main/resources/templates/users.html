@@ -37,6 +37,14 @@
                             <a class="nav-link active" aria-current="page" th:href="@{/logout}">Logout</a>
                         </li>
                     </ul>
+                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                        <!-- User information section -->
+                        <li class="nav-item" th:if="${authenticated}">
+                            <span class="navbar-text text-white">
+                                <span th:text="${fullName}"></span>
+                            </span>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </nav>
@@ -82,6 +90,7 @@
                                 Change Role
                             </button>
                             <div class="dropdown-menu dropdown-menu-end"
+                                 style="cursor: pointer;"
                                  th:attr="aria-labelledby='dropdownMenuButton_' + ${user.id}">
                                 <a th:each="role : ${roles}"
                                    class="dropdown-item"
@@ -103,7 +112,6 @@
                     contentType: 'application/json',
                     data: JSON.stringify({ roleName: roleName }),
                     success: function (response) {
-                        alert('Role changed successfully to ' + roleName);
                         location.reload(); // Reload the page to see changes
                     },
                     error: function (error) {
