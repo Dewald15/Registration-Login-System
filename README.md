@@ -20,6 +20,7 @@ This project is a Spring Boot application providing a registration and login sys
 7. [Endpoints](#endpoints)
 8. [Authors](#authors)
 9. [Screenshots](#screenshots)
+10. [Technical Architecture Overview](#technical-architecture-overview)
 
 ## Prerequisites
 
@@ -244,3 +245,206 @@ Dewald van den Berg - [GitHub](https://github.com/Dewald15)
 
 ![Screenshot](src/main/resources/static/9.png)
 </div>
+
+# Technical Architecture Overview
+
+## Application Lifecycle with Spring Boot
+
+When you run your Spring Boot application, several critical steps occur in the background to initialize and configure your application components. Here's a detailed walkthrough of these operations:
+
+1. **Application Entry Point**
+- Class: `RegistrationLoginSystemApplication`
+- Method: `main`
+```bash
+public static void main(String[] args) {
+  SpringApplication.run(RegistrationLoginSystemApplication.class, args);
+}
+```
+- Operation:
+  - The `SpringApplication.run` method starts the entire Spring Boot framework.
+  - It bootstraps the application, setting up the default configurations, starting the Spring context, and performing classpath scans to identify and register beans.
+
+2. **Spring Boot Auto-Configuration**
+- Operation:
+  - Spring Boot uses auto-configuration to simplify the setup process. It automatically configures your application based on the dependencies present on the classpath.
+  - It creates and registers default beans and configurations for the application, such as data source configuration for databases, security settings, and web server setup.
+
+3. **Spring Application Context Initialization**
+- Operation:
+  - Spring Boot creates an `ApplicationContext`, which is a central container for managing beans and their lifecycles.
+  - The context scans for all classes annotated with Spring stereotypes (`@Component`, `@Service`, `@Repository`, `@Controller`, etc.), and it registers them as beans.
+
+4. **Component Scanning and Bean Creation**
+- Operation:
+  - Spring Boot scans the base package and its sub-packages for Spring-managed components.
+  - Components are created and managed as beans within the Spring context.
+  - Beans are instantiated, dependencies are injected, and configuration properties are set up.
+
+5. **Dependency Injection**
+- Operation:
+  - Spring uses Dependency Injection (DI) to wire together the components of the application.
+  - It resolves dependencies between beans and injects required dependencies into the components, ensuring they are ready to use.
+
+6. **Database Initialization**
+- Configuration
+  - File: `application.properties`
+  - Settings: 
+  ```bash
+  spring.datasource.url=jdbc:mysql://localhost:3306/registration_db
+  spring.datasource.username=root
+  spring.datasource.password=your_password
+  spring.jpa.hibernate.ddl-auto=update
+  ```
+- Operation: 
+  - Spring Boot sets up the data source and connects to the MySQL database using the provided credentials.
+  - It uses JPA to map the entities (`User`, `Role`) to database tables.
+  - Hibernate, as the JPA implementation, performs schema updates or validations based on the `spring.jpa.hibernate.ddl-auto` setting.
+
+7. **Security Configuration**
+- Class: `SpringSecurity`
+- Operation:
+  - This class configures the security filter chain, defining which endpoints require authentication and what roles can access specific resources.
+  - It also sets up password encoding and custom login/logout behaviors.
+
+8. **Request Handling and MVC**
+- Thymeleaf Templates: `index.html`, `login.html`, `register.html`, `edit_user.html`, `users.html`
+- Controller: `AuthController`
+- Operation: 
+  - Spring Boot uses the DispatcherServlet as the front controller to handle incoming HTTP requests.
+  - The `AuthController` defines the endpoints and manages the interactions between the user interface and the backend.
+  - Requests are mapped to the appropriate controller methods based on URL patterns.
+  - Controller methods return views (Thymeleaf templates) or data, which are rendered and sent back to the client.
+
+9. **Entity Management**
+- Entities: `User`, `Role`
+- Repositories: `UserRepository`, `RoleRepository`
+- Operation
+  - JPA repositories provide CRUD operations for managing `User` and `Role` entities.
+  - They handle data access and persistence operations, leveraging Spring Data JPA to simplify database interactions.
+
+10. **Service Layer Operations**
+- Services: `UserService`, `UserServiceImpl`
+- Operation: 
+  - The service layer encapsulates the business logic for user management.
+  - It handles user registration, updates, deletion, and role changes.
+  - `UserServiceImpl` performs operations such as encoding passwords, mapping DTOs to entities, and managing user sessions.
+
+11. **Custom User Details and Authentication**
+- Security Classes: `CustomUserDetails`, `CustomUserDetailsService`
+- Operation:
+  - `CustomUserDetailsService` implements `UserDetailsService` to load user-specific data during authentication.
+  - `CustomUserDetails` encapsulates user information such as roles and credentials, which Spring Security uses for authorization checks.
+
+12. **Post-Initialization**
+- Operation:
+  - After initializing all components, Spring Boot starts the embedded web server (e.g., Tomcat) and listens for incoming HTTP requests.
+  - The application is now fully initialized and ready to handle user interactions and perform its intended functions.
+
+## Component Interactions
+
+Here's how the major components interact during a typical request flow:
+
+### User Registration Flow
+
+**User Accesses Registration Page:**
+- **Request:** `GET /register`
+- **Controller:** `AuthController.showRegistrationForm`
+- **View:** `register.html`
+- **Operation:** 
+  - Displays the registration form.
+
+**User Submits Registration Form:**
+- **Request:** `POST /register/save`
+- **Controller:** `AuthController.registration`
+- **Service:** `UserService.saveUser`
+- **Repository:** `UserRepository`, `RoleRepository`
+- **Operation:** 
+  - Validates the user data.
+  - Encodes the password.
+  - Assigns a role (`ROLE_ADMIN` for the first user, `ROLE_USER` for others).
+  - Saves the new user to the database.
+
+### User Login Flow
+
+**User Accesses Login Page:**
+- **Request:** `GET /login`
+- **Controller:** `AuthController.login`
+- **View:** `login.html`
+- **Operation:**
+  - Displays the login form.
+
+**User Submits Login Credentials:**
+- **Request:** `POST /login`
+- **Security Filter:** `UsernamePasswordAuthenticationFilter`
+- **Service:** `CustomUserDetailsService.loadUserByUsername`
+- **Operation:**
+  - Authenticates the user against the database.
+  - Retrieves user details and roles.
+  - On success, redirects to the user list page (`/users`).
+
+### User Management Flow (Admin)
+
+**Admin Views User List:**
+- **Request:** `GET /users`
+- **Controller:** `AuthController.users`
+- **Service:** `UserService.findAllUsers`, `UserService.findAllRoles`
+- **View:** `users.html`
+- **Operation:**
+  - Fetches all users and their roles from the database.
+  - Displays the user list with options to edit, view, or delete users.
+
+**Admin Changes User Role:**
+- **Request:** `POST /user/{userId}/changeRole`
+- **Controller:** `AuthController.changeUserRole`
+- **Service:** `UserService.changeUserRole`
+- **Operation:**
+  - Updates the user's roles in the database.
+
+**Admin Deletes a User:**
+- **Request:** `GET /user/{userId}/delete`
+- **Controller:** `AuthController.deleteUser`
+- **Service:** `UserService.deleteUser`
+- **Operation:**
+  - Removes the user from the database.
+
+## Sequence Diagram
+
+Here is a simplified sequence diagram for a typical request-response flow in the application:
+```bash
+User -> Browser -> Spring Boot Application -> DispatcherServlet -> Controller -> Service -> Repository -> Database
+```
+1. **User Interaction:** The user initiates a request through the browser (e.g., accessing the registration page).
+2. **Request Handling:** The request is received by the Spring Boot application, where the `DispatcherServlet` dispatches it to the appropriate `Controller`.
+3. **Controller Logic:** The controller processes the request, interacts with the `Service` layer if necessary, and returns a view or data.
+4. **Service Operations:** The service layer performs business logic and may call `Repository` methods for data access.
+5. **Data Access:** Repositories interact with the database to retrieve or update data.
+6. **Response Generation:** The response is generated and sent back to the browser.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
