@@ -1,7 +1,7 @@
 # Registration and Login System
 
 ## Overview
-This project is a Spring Boot application providing a registration and login system. It manages user roles and provides functionalities for both standard users and administrators.
+This project is a Spring Boot application designed to provide a registration and login system. It leverages the MVC (Model-View-Controller) architecture, ensuring a clean separation of concerns and enhancing the maintainability of the code. The application also incorporates Spring Security for secure authentication and role-based access control.
 
 ### Key Features
 - **User Registration**: New users can register. The first registered user is assigned the `ROLE_ADMIN` role, and subsequent users receive the `ROLE_USER` role.
@@ -38,6 +38,7 @@ This project is a Spring Boot application providing a registration and login sys
 - MySQL
 - Lombok
 - Bootstrap
+- Maven
 
 ## Getting Started
 
@@ -250,7 +251,7 @@ Dewald van den Berg - [GitHub](https://github.com/Dewald15)
 
 ## Application Lifecycle with Spring Boot
 
-When you run your Spring Boot application, several critical steps occur in the background to initialize and configure your application components. Here's a detailed walkthrough of these operations:
+When you run the application, several critical steps occur in the background to initialize and configure the application components. Here's a detailed walkthrough of these operations:
 
 1. **Application Entry Point**
 - Class: `RegistrationLoginSystemApplication`
