@@ -1,23 +1,26 @@
 # Registration and Login System
 
-This is a Java Spring Boot application that provides a registration and login system for users. It allows users to register with their first name, last name, email, and password, and then log in with their email and password. Once logged in, users with the admin role can view a list of all registered users.
+## Overview
+This project is a Spring Boot application providing a registration and login system. It manages user roles and provides functionalities for both standard users and administrators.
+
+### Key Features
+- **User Registration**: New users can register. The first registered user is assigned the `ROLE_ADMIN` role, and subsequent users receive the `ROLE_USER` role.
+- **Authentication and Authorization**: Users can log in and are assigned roles which determine their access rights.
+- **Admin Functionality**: Admins can view a list of all users, edit user details, change user roles, and delete users. Admins cannot delete themselves or change their own role.
+- **User Functionality**: Standard users can view the user list and edit their own details.
 
 ## Table of Contents
 
-1. [Project Structure](#project-structure)
-2. [Getting Started](#getting-started)
-4. [Application Flow](#application-flow)
-5. [Configuration](#configuration)
-6. [Security Configuration](#security-configuration)
-7. [Service Layer](#service-layer)
-8. [Repository Layer](#repository-layer)
-9. [Entity Classes](#entity-classes)
-10. [DTO Classes](#dto-classes)
-11. [Controller Classes](#controller-classes)
-12. [View Layer](#view-layer)
-13. [Building and Running the Application](#building-and-running-the-application)
-14. [Authors](#authors)
-15. [Screenshots](#screenshots)
+1. [Prerequisites](#prerequisites)
+2. [Technologies Used](#technologies-used)
+4. [Getting Started](#getting-started)
+5. [Project Structure](#project-structure)
+6. [File Structure](#file-structure)
+7. [Detailed Description](#detailed-description)
+8. [Endpoints](#endpoints)
+9. [Building and Running the Application](#building-and-running-the-application)
+10. [Authors](#authors)
+11. [Screenshots](#screenshots)
 
 ## Prerequisites
 
@@ -27,17 +30,29 @@ This is a Java Spring Boot application that provides a registration and login sy
 
 ## Technologies Used
 
+- Java
 - Spring Boot 3.3.0
 - Spring Data JPA
-- Thymeleaf
 - Spring Security
+- Thymeleaf
 - MySQL
 - Lombok
+- Bootstrap
+
+## Getting Started
+
+1. Clone the repository or download the source code.
+2. Import the project into your preferred IDE (e.g., IntelliJ IDEA, Eclipse).
+3. Create a MySQL database named `registration_db`.
+4. Update the `application.properties` file with your MySQL server credentials.
+5. Run the application using the `RegistrationLoginSystemApplication` class.
+6. Access the application at [http://localhost:8080/](http://localhost:8080/index).
+
 
 ## Project Structure
 
 ```bash
-Registration-Login-System
+registration-login-system
 ├── src
 │   ├── main
 │   │   ├── java
@@ -45,7 +60,6 @@ Registration-Login-System
 │   │   │       └── dee
 │   │   │           └── registration_login_system
 │   │   │               ├── config
-│   │   │               │   ├── CustomAuthenticationSuccessHandler.java
 │   │   │               │   └── SpringSecurity.java
 │   │   │               ├── controller
 │   │   │               │   └── AuthController.java
@@ -58,19 +72,23 @@ Registration-Login-System
 │   │   │               │   ├── RoleRepository.java
 │   │   │               │   └── UserRepository.java
 │   │   │               ├── security
+│   │   │               │   ├── CustomUserDetails.java
 │   │   │               │   └── CustomUserDetailsService.java
 │   │   │               ├── service
 │   │   │               │   ├── UserService.java
+│   │   │               │   ├── ValidationGroups.java
 │   │   │               │   └── impl
 │   │   │               │       └── UserServiceImpl.java
 │   │   │               └── RegistrationLoginSystemApplication.java
 │   │   └── resources
 │   │       ├── static
 │   │       ├── templates
+│   │       │   ├── edit_user.html
 │   │       │   ├── index.html
 │   │       │   ├── login.html
 │   │       │   ├── register.html
-│   │       │   └── users.html
+│   │       │   ├── users.html
+│   │       │   └── view.html
 │   │       └── application.properties
 │   └── test
 │       └── java
@@ -80,102 +98,107 @@ Registration-Login-System
 │                       └── RegistrationLoginSystemApplicationTests.java
 └── pom.xml
 ```
+### Dependencies
 
-## Getting Started
+The `pom.xml` file includes essential Spring Boot dependencies such as:
 
-1. Clone the repository or download the source code.
-2. Import the project into your preferred IDE (e.g., IntelliJ IDEA, Eclipse).
-3. Create a MySQL database named `registration_db`.
-4. Update the `application.properties` file with your MySQL server credentials.
-5. Run the application using the `RegistrationLoginSystemApplication` class.
-6. Access the application at [http://localhost:8080/index](http://localhost:8080/index).
+- `spring-boot-starter-data-jpa`
+- `spring-boot-starter-thymeleaf`
+- `spring-boot-starter-validation`
+- `spring-boot-starter-web`
+- `spring-boot-starter-security`
+- `thymeleaf-extras-springsecurity6`
+- `mysql-connector-j`
 
-## Application Flow
+### Configuration
 
-### Registration
-- Users can register by providing their first name, last name, email, and password.
-- Upon successful registration, they will be redirected to the login page.
+- **Database**: Configured to use a MySQL database with details provided in `application.properties`.
+- **Spring Security**: Configured to handle user roles and permissions as defined in the `SpringSecurity` class.
 
-### Login
-- Users can log in using their registered email and password.
-- Upon successful login:
-    - Users with the admin role will be redirected to the users page.
-    - Regular users will be redirected to the index page.
+## File Structure
 
-### Users Page
-- Accessible only to users with the admin role.
-- This page displays a list of all registered users, including their first name, last name, and email.
+- src/main/java/com/dee/registration_login_system:
+  - **Controllers**: Manages web requests and user interactions (`AuthController`).
+  - **Entities**: Defines the data models for User and Role (`User`, `Role`).
+  - **DTOs**: Data Transfer Objects used for user data (`UserDto`).
+  - **Repositories**: Interfaces for data access operations (`UserRepository`, `RoleRepository`).
+  - **Security**: Configuration for security and custom user details service (`SpringSecurity`, `CustomUserDetails`, `CustomUserDetailsService`).
+  - **Services**: Business logic and service implementations (`UserService`, `UserServiceImpl`).
 
-### Logout
-- Users can log out from the application by clicking the "Logout" link in the navigation menu.
 
-## Configuration
+- src/main/resources/templates:
+  - **Thymeleaf Templates**: HTML templates for user interface (`index.html`, `login.html`, `register.html`, `edit_user.html`, `users.html`).
 
-The `application.properties` file contains the following configuration:
 
-```properties
-# Spring Application Name
-spring.application.name=student-management-system
+## Detailed Description
 
-# MySQL Database Configuration
-spring.datasource.url=jdbc:mysql://localhost:3306/registration_db
-spring.datasource.username=root
-spring.datasource.password=160991
+### 1. Application Configuration
 
-# Hibernate Configuration
-spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQLDialect
-spring.jpa.hibernate.ddl-auto=update
+- **application.properties**: Contains the configuration settings for the application such as the application name, database connection properties, and logging level for Spring Security.
 
-# Logging Configuration
-logging.level.org.springframework.security=DEBUG
-```
-Update the `spring.datasource.username` and `spring.datasource.password` properties with your MySQL server credentials.
+### 2. Security Configuration
 
-## Security Configuration
+- **SpringSecurity**:
+    - Configures the security filter chain and password encoding.
+    - Sets up role-based access control, specifying which endpoints are accessible to which roles.
+    - Customizes login and logout processes.
 
-The `SpringSecurity` class configures the application's security settings:
+### 3. Entity Definitions
 
-- Allows access to the registration page (`/register/**`) without authentication.
-- Allows access to the index page (`/index`) without authentication.
-- Requires the "ADMIN" role to access the users page (`/users`).
-- Configures the login page (`/login`) and login processing URL (`/login`).
-- Configures the logout URL (`/logout`).
+- **User**: Represents the user entity with fields for ID, name, email, password, and roles.
+- **Role**: Represents the role entity with fields for ID and name. Users can have multiple roles.
 
-The `CustomAuthenticationSuccessHandler` class is responsible for redirecting users to the appropriate page after successful authentication, based on their roles.
+### 4. Data Access
 
-## Service Layer
+- **UserRepository**: Provides CRUD operations for the User entity.
+- **RoleRepository**: Provides CRUD operations for the Role entity.
 
-The `UserService` interface and `UserServiceImpl` class handle the business logic related to user management:
+### 5. Service Layer
 
-- `saveUser`: Saves a new user to the database.
-- `findUserByEmail`: Retrieves a user by their email address.
-- `findAllUsers`: Retrieves a list of all registered users.
+- **UserService**: Interface defining the operations for user management.
+- **UserServiceImpl**: Implementation of `UserService` handling user registration, updates, deletion, and role management.
 
-## Repository Layer
+### 6. Web Layer
 
-The `UserRepository` and `RoleRepository` interfaces extend the `JpaRepository` interface from Spring Data JPA, providing CRUD operations for the User and Role entities, respectively.
+- **AuthController**:
+    - Manages user registration, login, and profile management.
+    - Handles role assignments and user listing for admins.
+    - Provides endpoints for changing user roles and viewing user details.
 
-## Entity Classes
+### 7. Custom Security Details
 
-- **User**: Represents a registered user with fields for id, name, email, password, and roles.
-- **Role**: Represents a user role with fields for id and name.
+- **CustomUserDetails**: Implements `UserDetails` to include user-specific information like ID and full name.
+- **CustomUserDetailsService**: Loads user details from the database for authentication.
 
-## DTO Classes
+### 8. HTML Templates
 
-- **UserDto**: A Data Transfer Object used for transferring user data between the application layers.
+- **index.html**: Home page template.
+- **login.html**: Login form for user authentication.
+- **register.html**: Registration form for new users.
+- **edit_user.html**: Form for editing user details.
+- **users.html**: Admin page for listing and managing users.
 
-## Controller Classes
+## Endpoints
 
-- **AuthController**: Handles user authentication, including registration, login, and displaying the list of users (for admins).
+### Public Endpoints
 
-## View Layer
+- **GET /index**: Landing page.
+- **GET /register**: Shows the registration form.
+- **POST /register/save**: Handles new user registration.
+- **GET /login**: Shows the login form.
 
-The application uses Thymeleaf templates for rendering the user interface:
+### User Endpoints
 
-- **index.html**: The home page.
-- **register.html**: The registration form.
-- **login.html**: The login form.
-- **users.html**: The page displaying the list of registered users (accessible to admins).
+- **GET `/users`**: Lists all users (accessible to both ADMIN and USER roles).
+- **GET `/user/{userId}/edit`**: Form for editing user details (accessible to ADMIN and the specific USER).
+- **POST `/user/{userId}`**: Handles updates to user details.
+- **GET `/user/{userId}/view`**: Displays detailed view of a user (accessible to ADMIN).
+
+### Admin Endpoints
+
+- **GET `/user/{userId}/delete`**: Deletes a user (ADMIN only).
+- **POST `/user/{userId}/changeRole`**: Changes the role of a user (ADMIN only).
+
 
 ## Building and Running the Application
 
@@ -192,7 +215,8 @@ To build and run the application, follow these steps:
     ```bash
    mvn spring-boot:run
     ```
-   The application will be accessible at http://localhost:8080.
+   - Open a browser and navigate to `http://localhost:8080/index` to access the home page.
+   - Register a new user to get started. The first user registered will be assigned as `ROLE_ADMIN`.
 
 ---
 
