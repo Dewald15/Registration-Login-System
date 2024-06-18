@@ -71,7 +71,8 @@
                     <td th:text="${user.firstName}"></td>
                     <td th:text="${user.lastName}"></td>
                     <td th:text="${user.email}"></td>
-                    <td sec:authorize="hasRole('ROLE_ADMIN')" th:text="${user.roles}"></td>
+                    <!-- Use replace to display roles without 'ROLE_' prefix -->
+                    <td sec:authorize="hasRole('ROLE_ADMIN')" th:text="${#strings.replace(user.roles, 'ROLE_', '')}"></td>
                     <td class="d-flex justify-content-center align-items-center">
                         <div class="d-flex me-2">
                             <a class="btn btn-primary me-2" sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{/user/{userId}/edit(userId=${user.id})}">Edit</a>

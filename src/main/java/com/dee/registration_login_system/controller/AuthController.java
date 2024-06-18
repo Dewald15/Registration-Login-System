@@ -82,7 +82,6 @@ public class AuthController {
         List<UserDto> users = userService.findAllUsers();
         model.addAttribute("authenticated", principal != null);
         model.addAttribute("users", users);
-
         if (userDetailsPrincipal instanceof CustomUserDetails) {
             CustomUserDetails customUserDetails = (CustomUserDetails) userDetailsPrincipal;
 
@@ -153,6 +152,11 @@ public class AuthController {
         }
         userDto.setId(userId);
         userService.updateUser(userDto);
+
+        // Update session with new user details
+        UserDto updatedUser = userService.getUserById(userId);
+        userService.updateUserInSession(updatedUser);
+
         return "redirect:/users";
     }
 

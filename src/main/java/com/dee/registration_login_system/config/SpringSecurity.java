@@ -19,9 +19,6 @@ public class SpringSecurity {
     @Autowired
     private UserDetailsService userDetailsService;
 
-    @Autowired
-    private CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
-
     @Bean
     public static PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();

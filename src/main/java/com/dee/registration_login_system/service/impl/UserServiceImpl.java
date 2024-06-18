@@ -5,9 +5,13 @@ import com.dee.registration_login_system.entity.Role;
 import com.dee.registration_login_system.entity.User;
 import com.dee.registration_login_system.repository.RoleRepository;
 import com.dee.registration_login_system.repository.UserRepository;
+import com.dee.registration_login_system.security.CustomUserDetails;
 import com.dee.registration_login_system.service.UserService;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -157,5 +161,20 @@ public class UserServiceImpl implements UserService {
         Role role = new Role();
         role.setName(newRole);
         return roleRepository.save(role);
+    }
+
+    public void updateUserInSession(UserDto updatedUser) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails userDetails = (CustomUserDetails) auth.getPrincipal();
+
+        // Update the CustomUserDetails object with new details
+        userDetails.setFullName(updatedUser.getFirstName() + " " + updatedUser.getLastName());
+
+        // Re-authenticate with updated details
+        UsernamePasswordAuthenticationToken newAuth = new UsernamePasswordAuthenticationToken(
+                userDetails,
+                auth.getCredentials(),
+                auth.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(newAuth);
     }
 }

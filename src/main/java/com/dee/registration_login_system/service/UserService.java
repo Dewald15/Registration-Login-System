@@ -15,4 +15,5 @@ public interface UserService {
     void updateUser(UserDto userDto);
     void changeUserRole(Long userId, String roleName);
     List<Role> findAllRoles();
+    void updateUserInSession(UserDto updatedUser);
 }
