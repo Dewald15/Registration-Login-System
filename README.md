@@ -200,10 +200,6 @@ The `pom.xml` file includes essential Spring Boot dependencies such as:
 - **GET `/user/{userId}/delete`**: Deletes a user (ADMIN only).
 - **POST `/user/{userId}/changeRole`**: Changes the role of a user (ADMIN only).
 
----
-
-That's it! This documentation should help you understand the structure, functionality, and configuration of the Registration and Login System project.
-
 ## Authors
 
 Dewald van den Berg - [GitHub](https://github.com/Dewald15)
@@ -212,7 +208,7 @@ Dewald van den Berg - [GitHub](https://github.com/Dewald15)
 ## Screenshots
 <div style="text-align: center;">
 
-### 1. **login.html**
+### 1. **index.html**
 
 ![Screenshot](src/main/resources/static/1.png)
 
@@ -220,7 +216,7 @@ Dewald van den Berg - [GitHub](https://github.com/Dewald15)
 
 ![Screenshot](src/main/resources/static/2.png)
 
-### 3. **index.html**
+### 3. **login.html**
 
 ![Screenshot](src/main/resources/static/3.png)
 
@@ -228,11 +224,23 @@ Dewald van den Berg - [GitHub](https://github.com/Dewald15)
 
 ![Screenshot](src/main/resources/static/4.png)
 
-### 5. **index.html (logged in with USER role)**
+### 5. **edit_user.html**
 
 ![Screenshot](src/main/resources/static/5.png)
 
-### 6. **login.html (after logout)**
+### 6. **view_user.html**
 
 ![Screenshot](src/main/resources/static/6.png)
+
+### 7. **users.html (Change Role Dropdown)**
+
+![Screenshot](src/main/resources/static/7.png)
+
+### 8. **users.html (logged in with USER role)**
+
+![Screenshot](src/main/resources/static/8.png)
+
+### 9. **login.html (after logout)**
+
+![Screenshot](src/main/resources/static/9.png)
 </div>
