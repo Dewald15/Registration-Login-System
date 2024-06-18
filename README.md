@@ -13,14 +13,13 @@ This project is a Spring Boot application providing a registration and login sys
 
 1. [Prerequisites](#prerequisites)
 2. [Technologies Used](#technologies-used)
-4. [Getting Started](#getting-started)
-5. [Project Structure](#project-structure)
-6. [File Structure](#file-structure)
-7. [Detailed Description](#detailed-description)
-8. [Endpoints](#endpoints)
-9. [Building and Running the Application](#building-and-running-the-application)
-10. [Authors](#authors)
-11. [Screenshots](#screenshots)
+3. [Getting Started](#getting-started)
+4. [Project Structure](#project-structure)
+5. [File Structure](#file-structure)
+6. [Detailed Description](#detailed-description)
+7. [Endpoints](#endpoints)
+8. [Authors](#authors)
+9. [Screenshots](#screenshots)
 
 ## Prerequisites
 
@@ -46,7 +45,9 @@ This project is a Spring Boot application providing a registration and login sys
 3. Create a MySQL database named `registration_db`.
 4. Update the `application.properties` file with your MySQL server credentials.
 5. Run the application using the `RegistrationLoginSystemApplication` class.
-6. Access the application at [http://localhost:8080/](http://localhost:8080/index).
+6. Open a browser and navigate to [http://localhost:8080/index](http://localhost:8080/index) to access the home page.
+7. Register a new user to get started. The first user registered will be assigned as `ROLE_ADMIN`.
+
 
 
 ## Project Structure
@@ -198,25 +199,6 @@ The `pom.xml` file includes essential Spring Boot dependencies such as:
 
 - **GET `/user/{userId}/delete`**: Deletes a user (ADMIN only).
 - **POST `/user/{userId}/changeRole`**: Changes the role of a user (ADMIN only).
-
-
-## Building and Running the Application
-
-To build and run the application, follow these steps:
-
-1. Open a terminal or command prompt.
-2. Navigate to the project directory.
-3. Run the following command to build the project:
-
-   ```bash
-   mvn clean install
-    ```
-   After a successful build, run the following command to start the application:
-    ```bash
-   mvn spring-boot:run
-    ```
-   - Open a browser and navigate to `http://localhost:8080/index` to access the home page.
-   - Register a new user to get started. The first user registered will be assigned as `ROLE_ADMIN`.
 
 ---
 
