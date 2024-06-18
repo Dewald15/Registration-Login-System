@@ -18,9 +18,9 @@ This project is a Spring Boot application designed to provide a registration and
 5. [File Structure](#file-structure)
 6. [Detailed Description](#detailed-description)
 7. [Endpoints](#endpoints)
-8. [Authors](#authors)
-9. [Screenshots](#screenshots)
-10. [Technical Architecture Overview](#technical-architecture-overview)
+8. [Technical Architecture Overview](#technical-architecture-overview---application-lifecycle-with-spring-boot)
+9. [Authors](#authors)
+10. [Screenshots](#screenshots)
 
 ## Prerequisites
 
@@ -185,10 +185,10 @@ The `pom.xml` file includes essential Spring Boot dependencies such as:
 
 ### Public Endpoints
 
-- **GET /index**: Landing page.
-- **GET /register**: Shows the registration form.
-- **POST /register/save**: Handles new user registration.
-- **GET /login**: Shows the login form.
+- **GET `/index`**: Landing page.
+- **GET `/register`**: Shows the registration form.
+- **POST `/register/save`**: Handles new user registration.
+- **GET `/login`**: Shows the login form.
 
 ### User Endpoints
 
@@ -202,61 +202,14 @@ The `pom.xml` file includes essential Spring Boot dependencies such as:
 - **GET `/user/{userId}/delete`**: Deletes a user (ADMIN only).
 - **POST `/user/{userId}/changeRole`**: Changes the role of a user (ADMIN only).
 
-## Authors
-
-Dewald van den Berg - [GitHub](https://github.com/Dewald15)
-
-
-## Screenshots
-<div style="text-align: center;">
-
-### 1. **index.html**
-
-![Screenshot](src/main/resources/static/1.png)
-
-### 2. **register.html**
-
-![Screenshot](src/main/resources/static/2.png)
-
-### 3. **login.html**
-
-![Screenshot](src/main/resources/static/3.png)
-
-### 4. **users.html (logged in with ADMIN role)**
-
-![Screenshot](src/main/resources/static/4.png)
-
-### 5. **edit_user.html**
-
-![Screenshot](src/main/resources/static/5.png)
-
-### 6. **view_user.html**
-
-![Screenshot](src/main/resources/static/6.png)
-
-### 7. **users.html (Change Role Dropdown)**
-
-![Screenshot](src/main/resources/static/7.png)
-
-### 8. **users.html (logged in with USER role)**
-
-![Screenshot](src/main/resources/static/8.png)
-
-### 9. **login.html (after logout)**
-
-![Screenshot](src/main/resources/static/9.png)
-</div>
-
-# Technical Architecture Overview
-
-## Application Lifecycle with Spring Boot
+## Technical Architecture Overview - Application Lifecycle with Spring Boot
 
 When you run the application, several critical steps occur in the background to initialize and configure the application components. Here's a detailed walkthrough of these operations:
 
 1. **Application Entry Point**
 - Class: `RegistrationLoginSystemApplication`
 - Method: `main`
-```bash
+```java
 public static void main(String[] args) {
   SpringApplication.run(RegistrationLoginSystemApplication.class, args);
 }
@@ -422,6 +375,50 @@ User -> Browser -> Spring Boot Application -> DispatcherServlet -> Controller ->
 6. **Response Generation:** The response is generated and sent back to the browser.
 
 
+## Authors
+
+Dewald van den Berg - [GitHub](https://github.com/Dewald15)
+
+
+## Screenshots
+<div style="text-align: center;">
+
+### 1. **index.html**
+
+![Screenshot](src/main/resources/static/1.png)
+
+### 2. **register.html**
+
+![Screenshot](src/main/resources/static/2.png)
+
+### 3. **login.html**
+
+![Screenshot](src/main/resources/static/3.png)
+
+### 4. **users.html (logged in with ADMIN role)**
+
+![Screenshot](src/main/resources/static/4.png)
+
+### 5. **edit_user.html**
+
+![Screenshot](src/main/resources/static/5.png)
+
+### 6. **view_user.html**
+
+![Screenshot](src/main/resources/static/6.png)
+
+### 7. **users.html (Change Role Dropdown)**
+
+![Screenshot](src/main/resources/static/7.png)
+
+### 8. **users.html (logged in with USER role)**
+
+![Screenshot](src/main/resources/static/8.png)
+
+### 9. **login.html (after logout)**
+
+![Screenshot](src/main/resources/static/9.png)
+</div>
 
 
 
