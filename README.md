@@ -19,14 +19,20 @@ This project is a Spring Boot application designed to provide a registration and
 6. [Detailed Description](#detailed-description)
 7. [Endpoints](#endpoints)
 8. [Technical Architecture Overview](#technical-architecture-overview---application-lifecycle-with-spring-boot)
-9. [Authors](#authors)
-10. [Screenshots](#screenshots)
+9. [Component Interactions](#component-interactions)
+10. [Sequence Diagram](#sequence-diagram)
+11. [Authors](#authors)
+12. [Screenshots](#screenshots)
+
+<br>
 
 ## Prerequisites
 
 - Java Development Kit (JDK) 22
 - MySQL Server
 - Maven
+
+<br>
 
 ## Technologies Used
 
@@ -40,6 +46,8 @@ This project is a Spring Boot application designed to provide a registration and
 - Bootstrap
 - Maven
 
+<br>
+
 ## Getting Started
 
 1. Clone the repository or download the source code.
@@ -50,7 +58,7 @@ This project is a Spring Boot application designed to provide a registration and
 6. Open a browser and navigate to [http://localhost:8080/index](http://localhost:8080/index) to access the home page.
 7. Register a new user to get started. The first user registered will be assigned as `ROLE_ADMIN`.
 
-
+<br>
 
 ## Project Structure
 
@@ -118,6 +126,8 @@ The `pom.xml` file includes essential Spring Boot dependencies such as:
 - **Database**: Configured to use a MySQL database with details provided in `application.properties`.
 - **Spring Security**: Configured to handle user roles and permissions as defined in the `SpringSecurity` class.
 
+<br>
+
 ## File Structure
 
 - src/main/java/com/dee/registration_login_system:
@@ -132,6 +142,7 @@ The `pom.xml` file includes essential Spring Boot dependencies such as:
 - src/main/resources/templates:
   - **Thymeleaf Templates**: HTML templates for user interface (`index.html`, `login.html`, `register.html`, `edit_user.html`, `users.html`).
 
+<br>
 
 ## Detailed Description
 
@@ -181,6 +192,8 @@ The `pom.xml` file includes essential Spring Boot dependencies such as:
 - **edit_user.html**: Form for editing user details.
 - **users.html**: Admin page for listing and managing users.
 
+<br>
+
 ## Endpoints
 
 ### Public Endpoints
@@ -201,6 +214,8 @@ The `pom.xml` file includes essential Spring Boot dependencies such as:
 
 - **GET `/user/{userId}/delete`**: Deletes a user (ADMIN only).
 - **POST `/user/{userId}/changeRole`**: Changes the role of a user (ADMIN only).
+
+<br>
 
 ## Technical Architecture Overview - Application Lifecycle with Spring Boot
 
@@ -294,6 +309,8 @@ public static void main(String[] args) {
   - After initializing all components, Spring Boot starts the embedded web server (e.g., Tomcat) and listens for incoming HTTP requests.
   - The application is now fully initialized and ready to handle user interactions and perform its intended functions.
 
+<br>
+
 ## Component Interactions
 
 Here's how the major components interact during a typical request flow:
@@ -361,6 +378,8 @@ Here's how the major components interact during a typical request flow:
 - **Operation:**
   - Removes the user from the database.
 
+<br>
+
 ## Sequence Diagram
 
 Here is a simplified sequence diagram for a typical request-response flow in the application:
@@ -374,11 +393,13 @@ User -> Browser -> Spring Boot Application -> DispatcherServlet -> Controller ->
 5. **Data Access:** Repositories interact with the database to retrieve or update data.
 6. **Response Generation:** The response is generated and sent back to the browser.
 
+<br>
 
 ## Authors
 
 Dewald van den Berg - [GitHub](https://github.com/Dewald15)
 
+<br>
 
 ## Screenshots
 <div style="text-align: center;">
