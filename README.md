@@ -1,5 +1,7 @@
 # Registration and Login System
 
+<br>
+
 ## Overview
 This project is a Spring Boot application designed to provide a registration and login system. It leverages the MVC (Model-View-Controller) architecture, ensuring a clean separation of concerns and enhancing the maintainability of the code. The application also incorporates Spring Security for secure authentication and role-based access control.
 
@@ -8,6 +10,8 @@ This project is a Spring Boot application designed to provide a registration and
 - **Authentication and Authorization**: Users can log in and are assigned roles which determine their access rights.
 - **Admin Functionality**: Admins can view a list of all users, edit user details, change user roles, and delete users. Admins cannot delete themselves or change their own role.
 - **User Functionality**: Standard users can view the user list and edit their own details.
+
+<br>
 
 ## Table of Contents
 
